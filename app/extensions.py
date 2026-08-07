@@ -1,8 +1,8 @@
 """
 Application extensions.
 
-Creates shared Flask extensions that are initialized inside 
-the application factory.
+Creates shared Flask extensions that are 
+initialized inside the application factory.
 """
 
 from flask_sqlalchemy import SQLAlchemy
