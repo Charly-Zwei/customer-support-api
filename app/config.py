@@ -1,7 +1,7 @@
 """
 Application Configuration.
 
-Loads environmental variables and defines the applications's 
+Loads environmental variables and defines the application's 
 configuration settings
 """
 import os
@@ -14,4 +14,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-print("DATABASE_URL:", os.getenv("DATABASE_URL"))
+    if not SQLALCHEMY_DATABASE_URI:
+        raise RuntimeError(
+            "DATABASE_URL environment variable is not configured"
+        )

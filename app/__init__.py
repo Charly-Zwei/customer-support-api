@@ -1,9 +1,9 @@
 """
 Application Factory
 
-This module builds and cofigures the Flask Application.
+This module builds and configures the Flask Application.
 Responsabilities:
-- Create Flask
+- Create the Flask Application
 - load configuration
 - Initialize extensions
 - Register Blueprints
@@ -14,6 +14,7 @@ from flask import Flask
 from .config import Config
 from .extensions import db, migrate
 from .routes.main import main_bp
+
 
 def create_app():
     """
@@ -30,6 +31,8 @@ def create_app():
 
     #Flask-Migrate
     migrate.init_app(app, db)
+
+    from app import models
 
     #Blueprint Initializer
     app.register_blueprint(main_bp)
