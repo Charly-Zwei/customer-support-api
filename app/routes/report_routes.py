@@ -1,5 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, send_file
 from app.services.report_service import ReportService
+from app.services.export_service import ExportService
 
 report_bp = Blueprint("reports", __name__, url_prefix="/reports")
 
@@ -19,3 +20,16 @@ def get_loyal_customers():
         }
         for row in report
     ], 200
+
+@report_bp.get("/loyal-customers/export")
+def export_loyal_customers():
+    report = ReportService.get_loyal_customers_report()
+
+    output = ExportService.to_excel(report)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name="loyal_customers.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )

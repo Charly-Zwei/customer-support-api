@@ -12,7 +12,7 @@ class DocumentType (db.Model):
 
     customers = db.relationship(
         "Customer",
-        back_populates="document_types",
+        back_populates="document_type",
         lazy=True
     )
 
