@@ -111,7 +111,7 @@ function displayCustomer(customer) {
 // Load customer purchases
 async function loadPurchases(customerId) {
     const response = await fetch(
-        `/purchases/${customerId}/purchases`
+        `/customers/${customerId}/purchases`
     );
 
     const purchases = await response.json();
@@ -125,6 +125,13 @@ async function loadPurchases(customerId) {
     displayPurchases(purchases);
 }
 
+// Format Dates
+function formatDate(date) {
+    return new Intl.DateTimeFormat("en-CO", {
+        dateStyle: "medium",
+        timeStyle: "short"
+    }).format(new Date(date));
+}
 
 // Display purchases
 function displayPurchases(purchases) {
@@ -149,7 +156,7 @@ function displayPurchases(purchases) {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${purchase.purchase_date}</td>
+            <td>${formatDate(purchase.purchase_date)}</td>
             <td>${formatCurrency(purchase.amount)}</td>
             <td>${purchase.description || ""}</td>
         `;

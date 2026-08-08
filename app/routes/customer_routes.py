@@ -1,8 +1,9 @@
 from flask import Blueprint, request
 from marshmallow import ValidationError
 from app.schemas.customer_schema import customer_schema, customers_schema
+from app.schemas.purchase_schema import purchases_schema
 from app.services.customer_services import CustomerService
-
+from app.services.purchase_service import PurchaseService
 customer_bp = Blueprint("customers", __name__, url_prefix="/customers")
 
 
@@ -45,3 +46,15 @@ def update_customer(customer_id):
         return {"message": error.messages}, 400
     except ValueError as error:
         return {"message": str(error)}, 400
+
+@customer_bp.get("/<int:customer_id>/purchases")
+def get_customer_purchases(customer_id):
+    try:
+        purchases = PurchaseService.get_customer_purchases(
+            customer_id
+        )
+
+        return purchases_schema.dump(purchases), 200
+
+    except ValueError as error:
+        return {"message": str(error)}, 404

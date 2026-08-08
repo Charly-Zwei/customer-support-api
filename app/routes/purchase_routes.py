@@ -32,15 +32,3 @@ def get_all_purchases():
     purchases = PurchaseService.get_all_purchases()
 
     return purchases_schema.dump(purchases), 200
-
-@purchase_bp.get("/<int:customer_id>/purchases")
-def get_customer_purchases(customer_id):
-    try:
-        purchases = PurchaseService.get_customer_purchases(
-            customer_id
-        )
-
-        return purchases_schema.dump(purchases), 200
-
-    except ValueError as error:
-        return {"message": str(error)}, 404
