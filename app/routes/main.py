@@ -5,7 +5,7 @@ Provides basic endpoints used to verify that the
 application is running correctly.
 """
 
-from flask import Blueprint
+from flask import Blueprint, render_template
 
 main_bp = Blueprint("main", __name__)
 
@@ -17,7 +17,7 @@ def index():
     Returns:
         str: A message indicating that the API is running.
     """
-    return "Customer Support API is running"
+    return render_template("index.html")
 
 @main_bp.get("/health")
 def health():

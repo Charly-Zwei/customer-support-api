@@ -9,6 +9,7 @@ class CustomerSchema(Schema):
     id = fields.Int(dump_only=True)
 
     document_type_id = fields.Int(required=True)
+    document_type = fields.String(attribute="document_type.name", dump_only=True)
     document_number = fields.Str(required=True)
 
     first_name = fields.Str(required=True)
