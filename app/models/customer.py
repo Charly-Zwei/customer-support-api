@@ -6,7 +6,7 @@ class Customer(db.Model):
     Represents a customer in the system
     """
 
-    __tablename__="customers"
+    __tablename__ = "customers"
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -17,13 +17,11 @@ class Customer(db.Model):
     )
     document_number = db.Column(
         db.String(30),
-        nullable=False,
-        unique=True,
-        index=True
+        nullable=False
     )
     first_name = db.Column(
         db.String(100),
-        nullable=False,
+        nullable=False
     )
     last_name = db.Column(
         db.String(100),
@@ -53,6 +51,16 @@ class Customer(db.Model):
         back_populates="customer",
         cascade="all, delete-orphan",
         lazy=True
+    )
+
+    # The combination of document type and document number must be unique.
+    # Ex: CC 123456 != TI 123456
+    __table_args__ = (
+        db.UniqueConstraint(
+            "document_type_id",
+            "document_number",
+            name="uq_customer_document"
+        ),
     )
 
     def __repr__(self) -> str:
