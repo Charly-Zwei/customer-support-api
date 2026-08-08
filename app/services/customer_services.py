@@ -5,6 +5,7 @@ Contains the business logic related to customer management.
 """
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from app.extensions import db
 from app.models import Customer
 from app.models import DocumentType
@@ -239,6 +240,11 @@ class CustomerService:
         try:
             db.session.commit()
             return customer
+        except IntegrityError as error:
+            db.session.rollback()
+            raise ValueError(
+                "Document number already exists for this document type"
+                ) from error
         except Exception:
             db.session.rollback()
             raise
