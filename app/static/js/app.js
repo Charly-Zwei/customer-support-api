@@ -1,7 +1,6 @@
 const searchForm = document.getElementById("customer-search-form");
 const errorMessage = document.getElementById("error-message");
 const customerResult = document.getElementById("customer-result");
-console.log("APP.JS CARGADO");
 // Loyal customers
 const loadLoyalCustomersButton =
     document.getElementById("load-loyal-customers");
@@ -26,9 +25,6 @@ searchForm.addEventListener("submit", async (event) => {
         .value
         .trim();
 
-    console.log("Tipo de documento:", documentType);
-    console.log("Número de documento:", documentNumber);
-
     hideError();
     customerResult.classList.add("d-none");
 
@@ -42,9 +38,6 @@ searchForm.addEventListener("submit", async (event) => {
 
         const data = await response.json();
 
-        console.log("Respuesta API:", data);
-        console.log("Status:", response.status);
-
         if (!response.ok) {
             throw new Error(
                 data.message || "Customer not found"
@@ -53,14 +46,9 @@ searchForm.addEventListener("submit", async (event) => {
 
         customer = data;
 
-        console.log("Cliente antes de mostrar:", customer);
-
         displayCustomer(customer);
 
-        console.log("displayCustomer ejecutado");
-
     } catch (error) {
-        console.error("Error buscando cliente:", error);
         showError(error.message);
         return;
     }
@@ -70,7 +58,6 @@ searchForm.addEventListener("submit", async (event) => {
         await loadPurchases(customer.id);
 
     } catch (error) {
-        console.error("Error cargando compras:", error);
         showError(error.message);
     }
 });

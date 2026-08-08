@@ -90,5 +90,3 @@ with app.app_context():
 
     db.session.add_all(purchases)
     db.session.commit()
-
-    print("Database seeded.")
