@@ -77,6 +77,11 @@ with app.app_context():
             description="Purchase 2"
         ),
         Purchase(
+            customer_id=customers[1].id,
+            amount=4_000_000,
+            description="Purchase 3"
+        ),
+        Purchase(
             customer_id=customers[2].id,
             amount=4_000_000,
             description="Purchase 1"

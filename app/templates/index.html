@@ -155,6 +155,43 @@
             </div>
 
         </section>
+        <section id="loyal-customers-section" class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Clientes leales</h2>
+
+                <button
+                    id="load-loyal-customers"
+                    class="btn btn-primary"
+                    type="button"
+                >
+                    Consultar reporte
+                </button>
+            </div>
+
+            <div
+                id="loyal-customers-error"
+                class="alert alert-danger d-none"
+                role="alert"
+            ></div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Documento</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Total comprado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="loyal-customers-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
     </main>
 
