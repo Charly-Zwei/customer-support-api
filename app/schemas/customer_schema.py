@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields
+from app.schemas.document_schema import DocumentTypeSchema
 
 
 class CustomerSchema(Schema):
@@ -8,8 +9,13 @@ class CustomerSchema(Schema):
 
     id = fields.Int(dump_only=True)
 
-    document_type_id = fields.Int(required=True)
-    document_type = fields.String(attribute="document_type.name", dump_only=True)
+    #document_type_id = fields.Int(required=True)
+    document_type = fields.Function(
+        serialize=lambda customer: customer.document_type.name,
+        deserialize=lambda value: value,
+        required=True
+    )
+    
     document_number = fields.Str(required=True)
 
     first_name = fields.Str(required=True)

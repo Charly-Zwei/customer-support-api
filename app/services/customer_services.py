@@ -68,7 +68,7 @@ class CustomerService:
 
     @staticmethod
     def create_customer(
-        document_type_id: int,
+        document_type: str,
         document_number: str,
         first_name: str,
         last_name: str,
@@ -78,7 +78,7 @@ class CustomerService:
         """
         Creates a Customer.
         Args:
-            document_type_id: Document type identifier.
+            document_type: Document type.
             document_number: Customer document number.
             first_name: Customer first name.
             last_name: Customer last name.
@@ -92,11 +92,11 @@ class CustomerService:
             ValueError: If the document type does not exist, or the
                 document number/email is already in use.
         """
-        document_type = db.session.get(DocumentType, document_type_id)
-        if document_type is None:
+        document_type_obj = db.session.scalar(select(DocumentType).where(DocumentType.name == document_type))
+        if document_type_obj is None:
             raise ValueError("Document type does not exist.")
 
-        customer = CustomerService.get_customer_by_document(document_number)
+        customer = CustomerService.get_customer_by_document(document_type, document_number)
         if customer is not None:
             raise ValueError("Document already exists.")
 
@@ -105,7 +105,7 @@ class CustomerService:
             raise ValueError("Email already exists")
 
         customer = Customer(
-            document_type_id=document_type_id,
+            document_type_id=document_type_obj.id,
             document_number=document_number,
             first_name=first_name,
             last_name=last_name,
@@ -139,7 +139,7 @@ class CustomerService:
     @staticmethod
     def update_customer(
         customer_id: int,
-        document_type_id: int | None = None,
+        document_type: str | None = None,
         document_number: str | None = None,
         first_name: str | None = None,
         last_name: str | None = None,
@@ -152,7 +152,7 @@ class CustomerService:
 
         Args:
             customer_id: Customer identifier.
-            document_type_id: New document type ID.
+            document_type: New document type.
             document_number: New document number.
             first_name: New first name.
             last_name: New last name.
@@ -173,24 +173,42 @@ class CustomerService:
             raise ValueError("Customer not found")
 
         #DocumentType
-        if document_type_id is not None:
+        document_type_obj = None
 
-            document_type = db.session.get(
-                DocumentType,
-                document_type_id
+        if document_type is not None:
+            document_type_obj = db.session.scalar(
+                select(DocumentType).where(DocumentType.name == document_type)
             )
 
-            if document_type is None:
-                raise ValueError(
-                    "Document type does not exist."
-                )
+            if document_type_obj is None:
+                raise ValueError("Document type does not exist.")
 
-        #Document number
-        if (document_number is not None and document_number != customer.document_number):
+        # Determine the document type that will be used
+        document_type_for_check = (
+            document_type
+            if document_type is not None
+            else customer.document_type.name
+        )
+
+        # Document number
+        if (
+            document_number is not None
+            and (
+                document_number != customer.document_number
+                or document_type is not None
+            )
+        ):
             customer_with_document = (
-                CustomerService.get_customer_by_document(document_number)
+                CustomerService.get_customer_by_document(
+                    document_type_for_check,
+                    document_number
+                )
             )
-            if customer_with_document is not None:
+
+            if (
+                customer_with_document is not None
+                and customer_with_document.id != customer.id
+            ):
                 raise ValueError("Document number already exists")
 
         #Email
@@ -202,13 +220,14 @@ class CustomerService:
                 raise ValueError("Email already exists.")
 
         updates = {
-            "document_type_id": document_type_id,
             "document_number": document_number,
             "first_name": first_name,
             "last_name": last_name,
             "email": email,
             "phone": phone
         }
+        if document_type_obj is not None:
+            updates["document_type_id"] = document_type_obj.id
         updates = {
             key: value
             for key, value in updates.items()
