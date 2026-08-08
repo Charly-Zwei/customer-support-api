@@ -17,12 +17,17 @@ const loyalCustomersError =
 searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    const documentType = document
+        .getElementById("document-type")
+        .value;
+
     const documentNumber = document
         .getElementById("document-number")
         .value
         .trim();
-    
-    console.log("Documento buscado:", documentNumber);
+
+    console.log("Tipo de documento:", documentType);
+    console.log("Número de documento:", documentNumber);
 
     hideError();
     customerResult.classList.add("d-none");
@@ -32,7 +37,7 @@ searchForm.addEventListener("submit", async (event) => {
     // Get customer
     try {
         const response = await fetch(
-            `/customers/${encodeURIComponent(documentNumber)}`
+            `/customers/${encodeURIComponent(documentType)}/${encodeURIComponent(documentNumber)}`
         );
 
         const data = await response.json();
@@ -47,9 +52,13 @@ searchForm.addEventListener("submit", async (event) => {
         }
 
         customer = data;
+
         console.log("Cliente antes de mostrar:", customer);
+
         displayCustomer(customer);
+
         console.log("displayCustomer ejecutado");
+
     } catch (error) {
         console.error("Error buscando cliente:", error);
         showError(error.message);

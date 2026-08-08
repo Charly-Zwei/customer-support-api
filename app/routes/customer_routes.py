@@ -20,9 +20,9 @@ def create_customer():
         return {"message": str(error)}, 400
 
 
-@customer_bp.get("/<string:document_number>")
-def get_customer(document_number):
-    customer = CustomerService.get_customer_by_document(document_number)
+@customer_bp.get("/<string:document_type>/<string:document_number>")
+def get_customer(document_type, document_number):
+    customer = CustomerService.get_customer_by_document(document_type, document_number)
     if customer is None:
         return {"message": "Customer not found"}, 404
 

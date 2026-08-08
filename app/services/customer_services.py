@@ -29,17 +29,25 @@ class CustomerService:
         return db.session.get(Customer, customer_id)
 
     @staticmethod
-    def get_customer_by_document(document_number: str) -> Customer | None:
+    def get_customer_by_document(document_type, document_number: str) -> Customer | None:
         """
         Retrieve a customer by its document number.
 
         Args:
+            document_type: Customer document type.
             document_number: Customer document number.
 
         Returns:
             Customer if found, otherwise None.
         """
-        statement = select(Customer).where(Customer.document_number == document_number)
+        statement = (
+            select(Customer)
+            .join(DocumentType)
+            .where(
+                DocumentType.name == document_type,
+                Customer.document_number == document_number
+            )
+        )
 
         return db.session.scalar(statement)
 
@@ -108,6 +116,7 @@ class CustomerService:
             db.session.add(customer)
             db.session.commit()
             return customer
+        
         except Exception:
             db.session.rollback()
             raise
@@ -124,6 +133,7 @@ class CustomerService:
             Customer.first_name,
             Customer.last_name
         )
+
         return db.session.scalars(statement).all()
 
     @staticmethod
