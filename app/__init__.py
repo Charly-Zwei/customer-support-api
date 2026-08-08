@@ -17,6 +17,7 @@ from .routes.main import main_bp
 from .routes.customer_routes import customer_bp
 from .routes.purchase_routes import purchase_bp
 from .routes.report_routes import report_bp
+from app.routes.document_routes import document_type_bp
 
 def create_app():
     """
@@ -34,11 +35,12 @@ def create_app():
     #Flask-Migrate
     migrate.init_app(app, db)
 
-    from app import models
+    from app import models #checking
 
     #Blueprint Initializer
     app.register_blueprint(main_bp)
     app.register_blueprint(customer_bp)
     app.register_blueprint(purchase_bp)
     app.register_blueprint(report_bp)
+    app.register_blueprint(document_type_bp)
     return app

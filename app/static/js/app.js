@@ -1,6 +1,7 @@
 const searchForm = document.getElementById("customer-search-form");
 const errorMessage = document.getElementById("error-message");
 const customerResult = document.getElementById("customer-result");
+
 // Loyal customers
 const loadLoyalCustomersButton =
     document.getElementById("load-loyal-customers");
@@ -10,6 +11,32 @@ const loyalCustomersTableBody =
 
 const loyalCustomersError =
     document.getElementById("loyal-customers-error");
+
+
+// Load document types
+async function loadDocumentTypes() {
+    const response = await fetch("/document-types/");
+
+    const documentTypes = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            documentTypes.message || "Could not load document types"
+        );
+    }
+
+    const documentTypeSelect =
+        document.getElementById("document-type");
+
+    documentTypes.forEach((documentType) => {
+        const option = document.createElement("option");
+
+        option.value = documentType.name;
+        option.textContent = documentType.name;
+
+        documentTypeSelect.appendChild(option);
+    });
+}
 
 
 // Search customer
@@ -123,7 +150,7 @@ function displayPurchases(purchases) {
 
         row.innerHTML = `
             <td>${purchase.purchase_date}</td>
-            <td>${purchase.amount}</td>
+            <td>${formatCurrency(purchase.amount)}</td>
             <td>${purchase.description || ""}</td>
         `;
 
@@ -227,3 +254,9 @@ function hideLoyalCustomersError() {
     loyalCustomersError.textContent = "";
     loyalCustomersError.classList.add("d-none");
 }
+
+
+// Initialize document types
+loadDocumentTypes().catch((error) => {
+    showError(error.message);
+});
