@@ -14,7 +14,7 @@ from flask import Flask
 from .config import Config
 from .extensions import db, migrate
 from .routes.main import main_bp
-
+from .routes.customer_routes import customer_bp
 
 def create_app():
     """
@@ -36,5 +36,6 @@ def create_app():
 
     #Blueprint Initializer
     app.register_blueprint(main_bp)
+    app.register_blueprint(customer_bp)
 
     return app

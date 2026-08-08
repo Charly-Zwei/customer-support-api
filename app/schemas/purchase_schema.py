@@ -13,9 +13,9 @@ class PurchaseSchema(Schema):
 
     description = fields.Str()
     
-    purchase_date = fields.DateTime(required=True)
+    purchase_date = fields.DateTime(dump_only=True)
 
 
 #Instances
 purchase_schema = PurchaseSchema()
-purchase_schema = PurchaseSchema(many=True)
+purchases_schema = PurchaseSchema(many=True)
