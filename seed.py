@@ -29,7 +29,7 @@ with app.app_context():
             phone="3001234567"
         ),
         Customer(
-            document_type_id=document_type[4].id,
+            document_type_id=document_type[1].id,
             document_number="100000002",
             first_name="Ana",
             last_name="Gomez",
@@ -58,32 +58,27 @@ with app.app_context():
         ),
         Purchase(
             customer_id=customers[0].id,
-            amount=1_500_000,
+            amount=2_000_000,
             description="Purchase 2"
         ),
         Purchase(
-            customer_id=customers[0].id,
-            amount=2_000_000,
-            description="Purchase 3"
-        ),
-        Purchase(
             customer_id=customers[1].id,
-            amount=1_000_000,
+            amount=1_500_000,
             description="Purchase 1"
         ),
         Purchase(
             customer_id=customers[1].id,
-            amount=500_000,
+            amount=2_000_000,
             description="Purchase 2"
         ),
         Purchase(
-            customer_id=customers[1].id,
+            customer_id=customers[0].id,
             amount=4_000_000,
             description="Purchase 3"
         ),
         Purchase(
             customer_id=customers[2].id,
-            amount=4_000_000,
+            amount=5_000_000,
             description="Purchase 1"
         )
     ]
