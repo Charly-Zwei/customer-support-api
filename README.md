@@ -15,6 +15,7 @@ Flask REST API for customer management, document types, purchases, loyalty repor
 - Bootstrap
 - JavaScript
 - Docker
+- Gunicorn
 
 ## Features
 
@@ -88,6 +89,7 @@ instance/database.db
 ```
 
 The database file is not included in the repository. Its structure is recreated through the existing Flask-Migrate migrations.
+The database is stored in Flask’s instance directory to keep local data separate from the application code.
 
 ## Setup
 
@@ -100,7 +102,7 @@ git clone <repository-url>
 cd customer-support-api
 ```
 
-Create `.env` file as described in the Environment Configuration section.
+Create the `.env` file as described in the Environment Configuration section.
 
 Build and start the application:
 
@@ -108,7 +110,7 @@ Build and start the application:
 docker compose up --build
 ```
 
-The Docker setup builds the Python 3.14 image, installs the dependencies, loads the environment configuration, applies the existing migrations, and starts the Flask development server.
+The Docker setup builds the Python 3.14 image, installs the dependencies, loads the environment configuration, applies the existing migrations, and starts the Flask application using Gunicorn.
 
 Open:
 
@@ -128,17 +130,31 @@ The `instance/` directory is mounted into the container, so the SQLite database 
 
 Sample data is optional.
 
-To populate an empty database:
+To populate an empty database, keep the application running and open a **second terminal** in the project directory:
 
 ```bash
 docker compose exec app python seed.py
 ```
 
+Do not stop the running container before executing the command.
+
 Run the seed script only on an empty database. Running it again against an already populated database may create duplicate records or violate database constraints.
 
-If you want to populate the database with the sample data, keep the application running and open a **second terminal** in the project directory.
+## Production Deployment Notes
 
-Do not stop the running container and refresh after executing.
+This project uses Gunicorn as the WSGI server (see Docker Configuration above), 
+which is production-ready by default — the Flask development server is never used.
+
+For a production deployment:
+
+- Generate a strong `SECRET_KEY` (do not reuse the development value):
+  python -c "import secrets; print(secrets.token_hex(32))"
+- Ensure `FLASK_DEBUG` (or equivalent) is disabled/unset.
+- Run `flask --app run.py db upgrade` (or let Docker apply migrations automatically, 
+  as described above) before starting the application.
+- Place the container behind a reverse proxy (e.g. Nginx) if exposing it over HTTPS.
+- Back up the `instance/database.db` file periodically, since SQLite has no 
+  built-in replication or automated backups.
 
 ### Option 2: Run Without Docker
 
@@ -206,7 +222,7 @@ Run the seed script only on an empty database. Running it again against an alrea
 Start the application:
 
 ```bash
-python run.py
+flask --app run.py run
 ```
 
 Open:
@@ -320,11 +336,19 @@ When using Docker, existing migrations are applied automatically when the applic
 
 The Docker setup consists of:
 
-- `Dockerfile` — application image and startup process
+- `Dockerfile` — application image, database migration, and Gunicorn startup process
 - `docker-compose.yml` — container, environment variables, port, and SQLite persistence
 - `.dockerignore` — excludes local and unnecessary files from the Docker build context
 
-The Docker configuration is intended for local development and technical test evaluation. It is not intended to represent a production deployment architecture.
+The Docker configuration runs the Flask application using Gunicorn, a production WSGI server.
+
+Gunicorn starts the application with:
+
+```text
+gunicorn --bind 0.0.0.0:5000 run:app
+```
+
+SQLite is retained for this technical test, with the database persisted through the mounted `instance/` directory.
 
 ## Notes
 

@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "flask --app run.py db upgrade && flask --app run.py run --host=0.0.0.0"]
+CMD ["sh", "-c", "flask --app run.py db upgrade && gunicorn --bind 0.0.0.0:5000 run:app"]
