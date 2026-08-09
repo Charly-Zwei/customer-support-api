@@ -136,6 +136,10 @@ docker compose exec app python seed.py
 
 Run the seed script only on an empty database. Running it again against an already populated database may create duplicate records or violate database constraints.
 
+If you want to populate the database with the sample data, keep the application running and open a **second terminal** in the project directory.
+
+Do not stop the running container and refresh after executing.
+
 ### Option 2: Run Without Docker
 
 Clone the repository:
@@ -261,8 +265,6 @@ GET /customers/<customer_id>/export
 
 Exports the selected customer's information to an Excel file.
 
-The export uses a fixed file name. Do not change the file name.
-
 ### Loyal Customers
 
 ```text
@@ -270,8 +272,6 @@ GET /reports/loyal-customers/export
 ```
 
 Exports the loyal customer report to an Excel file.
-
-The export uses a fixed file name. Do not change the file name.
 
 The files are generated in memory using `BytesIO`, so temporary Excel files do not need to be stored on the server.
 
