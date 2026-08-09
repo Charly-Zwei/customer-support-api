@@ -74,7 +74,7 @@ Use `.env-example` as a reference or rename it to `.env`:
 
 ```env
 SECRET_KEY=your-secret-key
-DATABASE_URL=sqlite:///instance/database.db
+DATABASE_URL=sqlite:///database.db
 ```
 
 Replace `your-secret-key` with a secret value of your choice.
