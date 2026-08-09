@@ -25,7 +25,7 @@ def get_loyal_customers():
 def export_loyal_customers():
     report = ReportService.get_loyal_customers_report()
 
-    output = ExportService.to_excel(report)
+    output = ExportService.loyal_customers_excel(report)
 
     return send_file(
         output,

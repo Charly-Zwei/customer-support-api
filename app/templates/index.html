@@ -41,6 +41,7 @@
                             <label for="document-type" class="form-label">
                                 Document type
                             </label>
+
                             <select
                                 id="document-type"
                                 class="form-select"
@@ -86,14 +87,26 @@
             </div>
         </div>
 
+
         <section id="customer-result" class="d-none">
 
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
 
-                    <h2 class="h4 mb-4">Customer information</h2>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h4 mb-0">Customer information</h2>
+
+                        <a
+                            id="export-customer"
+                            href="#"
+                            class="btn btn-primary"
+                        >
+                            Export
+                        </a>
+                    </div>
 
                     <div class="row">
+
                         <div class="col-md-6">
                             <p>
                                 <strong>Document:</strong>
@@ -117,10 +130,12 @@
                                 <span id="customer-phone"></span>
                             </p>
                         </div>
+
                     </div>
 
                 </div>
             </div>
+
 
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -148,17 +163,33 @@
             </div>
 
         </section>
+
+
         <section id="loyal-customers-section" class="mt-5">
+
             <div class="d-flex justify-content-between align-items-center mb-3">
+
                 <h2>Loyal Customer(s)</h2>
 
-                <button
-                    id="load-loyal-customers"
-                    class="btn btn-primary"
-                    type="button"
-                >
-                    Check Report
-                </button>
+                <div class="d-flex gap-2">
+
+                    <button
+                        id="load-loyal-customers"
+                        class="btn btn-primary"
+                        type="button"
+                    >
+                        Check Report
+                    </button>
+
+                    <a
+                        href="/reports/loyal-customers/export"
+                        class="btn btn-primary"
+                    >
+                        Export Report
+                    </a>
+
+                </div>
+
             </div>
 
             <div
@@ -168,7 +199,9 @@
             ></div>
 
             <div class="table-responsive">
+
                 <table class="table table-striped table-hover">
+
                     <thead>
                         <tr>
                             <th>Type</th>
@@ -182,8 +215,11 @@
 
                     <tbody id="loyal-customers-table-body">
                     </tbody>
+
                 </table>
+
             </div>
+
         </section>
 
     </main>

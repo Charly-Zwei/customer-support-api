@@ -1,9 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 from marshmallow import ValidationError
 from app.schemas.customer_schema import customer_schema, customers_schema
 from app.schemas.purchase_schema import purchases_schema
 from app.services.customer_services import CustomerService
 from app.services.purchase_service import PurchaseService
+from app.services.export_service import ExportService
 customer_bp = Blueprint("customers", __name__, url_prefix="/customers")
 
 
@@ -58,3 +59,18 @@ def get_customer_purchases(customer_id):
 
     except ValueError as error:
         return {"message": str(error)}, 404
+
+@customer_bp.get("/<int:customer_id>/export")
+def export_customer(customer_id):
+    customer = CustomerService.get_customer_by_id(customer_id)
+    if customer is None:
+        return {"message": "Customer not found"}, 404
+
+    output = ExportService.customer_excel(customer)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name=f"customer_{customer.id}.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )

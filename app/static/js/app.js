@@ -2,6 +2,10 @@ const searchForm = document.getElementById("customer-search-form");
 const errorMessage = document.getElementById("error-message");
 const customerResult = document.getElementById("customer-result");
 
+const exportCustomerButton =
+    document.getElementById("export-customer");
+
+
 // Loyal customers
 const loadLoyalCustomersButton =
     document.getElementById("load-loyal-customers");
@@ -104,6 +108,9 @@ function displayCustomer(customer) {
     document.getElementById("customer-phone").textContent =
         customer.phone;
 
+    exportCustomerButton.href =
+        `/customers/${customer.id}/export`;
+
     customerResult.classList.remove("d-none");
 }
 
@@ -125,13 +132,15 @@ async function loadPurchases(customerId) {
     displayPurchases(purchases);
 }
 
-// Format Dates
+
+// Format dates
 function formatDate(date) {
     return new Intl.DateTimeFormat("en-CO", {
         dateStyle: "medium",
         timeStyle: "short"
     }).format(new Date(date));
 }
+
 
 // Display purchases
 function displayPurchases(purchases) {
